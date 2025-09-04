@@ -1,10 +1,12 @@
 package com.example.repairorders;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -27,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     EditText laborET;
     Button submitB; //Step 1: Create Button
 
+
+    private Spinner orderTypeSpinner;
+    private String selectedOrderType;
     //Step 2: Create Button
     View.OnClickListener buttonListener = new View.OnClickListener() { //anonymous class
         @Override
@@ -45,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         //UI created here!
         setContentView(R.layout.activity_main);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.order_type), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -64,13 +71,35 @@ public class MainActivity extends AppCompatActivity {
         submitB.setOnClickListener(buttonListener); //registering listener to button
 
 
-        orderET = findViewById(R.id.editText);
+       // orderET = findViewById(R.id.editText);
         inspecET = findViewById(R.id.editText2);
         paintET = findViewById(R.id.editText3);
         partsET = findViewById(R.id.editText4);
         laborET = findViewById(R.id.editText5);
 
         String value = totalTV.getText().toString();
+
+        orderTypeSpinner = findViewById(R.id.spinner_order_type);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.order_types,
+                android.R.layout.simple_spinner_item
+        );
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        orderTypeSpinner.setAdapter(adapter);
+
+        orderTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedOrderType = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedOrderType = null;
+            }
+        });
 
 
     }
